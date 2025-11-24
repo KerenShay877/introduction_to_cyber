@@ -1,0 +1,35 @@
+[
+  {"username": "user1_weak", "password": "123456", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user2_weak", "password": "mypassword", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user3_weak", "password": "ilovedogs", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user4_weak", "password": "111111", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user5_weak", "password": "abc123", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user6_weak", "password": "ilovecats", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user7_weak", "password": "000000", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user8_weak", "password": "123321", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user9_weak", "password": "admin", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+
+  {"username": "user10_weak", "password": "GROUP_SEED", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+
+  {"username": "user11_medium", "password": "TelAviv2025", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user12_medium", "password": "Summer2026", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user13_medium", "password": "BlueSky99", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user14_medium", "password": "Shay1234", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user15_medium", "password": "Israel2025", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user16_medium", "password": "Fall2023", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user17_medium", "password": "Soccer75", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user18_medium", "password": "HappyDays88", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user19_medium", "password": "Coffee321", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+  {"username": "user20_medium", "password": "Music2025", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
+
+  {"username": "user21_strong", "password": "X9!b$7kLm@Qz2#Rt", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
+  {"username": "user22_strong", "password": "dL3p$W8zR!rN0oL%", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="},
+  {"username": "user23_strong", "password": "mQ7&zT9!Lp@Xy4$K", "category": "strong", "hash_mode": "argon2id", "totp_secret": "MFRGGZDFMZTWQ2LK"},
+  {"username": "user24_strong", "password": "Z!rT7qL%vN3p$W8z", "category": "strong", "hash_mode": "argon2id", "totp_secret": "ONSWG4TFOQ======"},
+  {"username": "user25_strong", "password": "Qz2#tRX9!a$7kLm@", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
+  {"username": "user26_strong", "password": "T0qL%vN3p$W8zY!r", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="},
+  {"username": "user27_strong", "password": "Lm@Qz2#tRX9!a$7k", "category": "strong", "hash_mode": "argon2id", "totp_secret": "MFRGGZDFMZTWQ2LK"},
+  {"username": "user28_strong", "password": "W8zY!rT0qL%vN3p$", "category": "strong", "hash_mode": "argon2id", "totp_secret": "ONSWG4TFOQ======"},
+  {"username": "user29_strong", "password": "a$7kLm@Qz2#tRX9!", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
+  {"username": "user30_strong", "password": "Z!n1v3ns3#lxp@asion", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="}
+]
