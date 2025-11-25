@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+
+*.log
+logs/
+
+*.db
+registered_users.db
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+*.coverage
+*.pytest_cache/
