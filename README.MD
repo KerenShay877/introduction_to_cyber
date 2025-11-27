@@ -1,4 +1,4 @@
-GROUPSEED = 
+GROUPSEED =  532645069
 
 ## The reasoning behind the password categories in `users.json`
 

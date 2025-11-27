@@ -1,15 +1,15 @@
 # configuration file
 import os
 
-GROUP_SEED = int(os.environ.get("GROUP_SEED", "12345")) # add group seed
+GROUP_SEED = int(os.environ.get("GROUP_SEED", "532645069"))
 # PEPPER = os.environ.get("PEPPER", "Qz@N2oY#rN8wP!1qT0s^Rtl9Z%6nLqZ") # pepper for protection
 PEPPER = os.environ.get("PEPPER", "") # pepper for basic defences
-HASH_METHOD = os.environ.get("HASH_METHOD", "sha256") # changes between sha256, bcrypt, and argon2id
+HASH_METHOD = os.environ.get("HASH_METHOD", "sha256")
 
 DB_PATH = os.environ.get("DB_PATH", "data/registered_users.db")
 LOG_PATH = os.environ.get("LOG_PATH", "logs/attempts.log")
 
-DEFENCE_METHODS = {
+DEFENSE_METHODS = {
     "totp": False,
     "captcha": False,
     "lockout": False, 

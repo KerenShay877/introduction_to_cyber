@@ -1,13 +1,15 @@
 # main flask application
 from flask import Flask, request
-from config import GROUP_SEED, HASH_METHOD, DEFENCE_METHODS
+from config import GROUP_SEED, HASH_METHOD, DEFENSE_METHODS
 
 app = Flask(__name__)
 
 @app.route("/")
 def home_page():
-    # simple home page, we added a bit of styling to make it look a little nicer, 
-    # although the main experiement is done through the endpoints
+    """ 
+        simple home page, we added a bit of styling to make it look a little nicer, 
+        although the main experiement is done through the endpoints.
+    """
     return '''
     <!DOCTYPE html>
     <html>

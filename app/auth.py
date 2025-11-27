@@ -1,5 +1,4 @@
 # hashing functions and verification
-# yotam and shay
 import bcrypt
 import hashlib
 from argon2 import PasswordHasher

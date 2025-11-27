@@ -8,8 +8,7 @@
   {"username": "user7_weak", "password": "000000", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
   {"username": "user8_weak", "password": "123321", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
   {"username": "user9_weak", "password": "admin", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
-
-  {"username": "user10_weak", "password": "GROUP_SEED", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
+  {"username": "user10_weak", "password": "532645069", "category": "weak", "hash_mode": "sha256", "totp_secret": null},
 
   {"username": "user11_medium", "password": "TelAviv2025", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
   {"username": "user12_medium", "password": "Summer2026", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},

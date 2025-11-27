@@ -1,5 +1,4 @@
-# register users to the flask server and into the auth.db
-# in the server we have a dedicated endpoint for registering but we wrote a script to do that for all 30 users
+# script to register users to the flask server and into the auth.db
 import json
 import sqlite3
 import os
@@ -21,15 +20,12 @@ def hash_password(password, salt, method="sha256"):
         raise ValueError("Hash method is unsupported")
 
 def main():
-    # load users file
     with open("data/users.json", "r") as f:
         users = json.load(f)
 
-    # connection to database
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
-    # create table for users if it doesn't exist
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             username TEXT PRIMARY KEY,
@@ -40,7 +36,6 @@ def main():
         )
     """)
 
-    # insert users into the database
     for user in users:
         username = user["username"]
         password = user["password"]
