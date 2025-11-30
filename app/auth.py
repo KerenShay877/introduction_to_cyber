@@ -1,4 +1,4 @@
-# hashing functions and verification
+# auth.py
 import bcrypt
 import hashlib
 from argon2 import PasswordHasher
@@ -6,11 +6,11 @@ from config import PEPPER
 
 def password_hash(password: str, salt: str, method: str = "sha256") -> str:
     """
-        Take a password and hash it according to each hashing method
-        PEPPER is only added if it's on
+    Hash a password according to the chosen method.
+    PEPPER is only added if it's set (empty string disables it).
     """
     pwd = password + PEPPER
-    
+
     if method == "sha256":
         return hashlib.sha256((pwd + salt).encode()).hexdigest()
 
@@ -23,15 +23,17 @@ def password_hash(password: str, salt: str, method: str = "sha256") -> str:
 
     else:
         raise ValueError(f"Hash method not supported: {method}")
-    
+
+
 def verification_password(password: str, salt: str, hash_stored: str, method: str = "sha256") -> bool:
     """
-       Verify a password with hash that is already stored according to each hashing method 
+    Verify a password against the stored hash using the same method.
     """
     pwd = password + PEPPER
-    
+
     if method == "sha256":
-        return hashlib.sha256((pwd + salt).encode()).hexdigest() == hash_stored
+        candidate_hash = hashlib.sha256((pwd + salt).encode()).hexdigest()
+        return candidate_hash == hash_stored
 
     elif method == "bcrypt":
         try:

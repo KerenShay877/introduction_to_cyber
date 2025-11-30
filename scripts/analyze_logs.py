@@ -2,6 +2,11 @@ import json
 from datetime import datetime
 from statistics import mean
 from collections import defaultdict
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+USERS_FILE = os.path.join(BASE_DIR, "data", "users.json")
+LOG_FILE = os.path.join(BASE_DIR, "logs", "attempts.log")
 
 def parse_logs(log_file):
     """
@@ -14,7 +19,6 @@ def parse_logs(log_file):
         for line in f:
             try:
                 entry = json.loads(line.strip())
-                # Convert timestamp string to datetime
                 entry["timestamp"] = datetime.fromisoformat(entry["timestamp"])
                 results.append(entry)
             except json.JSONDecodeError:
@@ -39,20 +43,17 @@ def summarize(results, user_categories, keyspace_size=None):
     if not results:
         return summary
 
-    # Attempts per second
     timestamps = [r["timestamp"] for r in results]
     total_time = (max(timestamps) - min(timestamps)).total_seconds()
     if total_time > 0:
         summary["attempts_per_second"] = len(results) / total_time
 
-    # Time to first success
     successes = [r for r in results if r["result"] == "SUCCESS"]
     if successes:
         first_attempt_time = min(timestamps)
         first_success_time = min(r["timestamp"] for r in successes)
         summary["time_to_first_success"] = (first_success_time - first_attempt_time).total_seconds()
 
-    # Success rate by category
     attempts_by_cat = defaultdict(int)
     successes_by_cat = defaultdict(int)
     for r in results:
@@ -64,7 +65,6 @@ def summarize(results, user_categories, keyspace_size=None):
         if attempts_by_cat[cat] > 0:
             summary["success_rate_by_category"][cat] = successes_by_cat[cat] / attempts_by_cat[cat]
 
-    # Average latency per hash_mode
     latencies_by_hash = defaultdict(list)
     for r in results:
         latencies_by_hash[r["hash_mode"]].append(r.get("latency_ms", 0))
@@ -73,20 +73,18 @@ def summarize(results, user_categories, keyspace_size=None):
 
     # Extrapolation if full crack not achieved
     if keyspace_size and summary["attempts_per_second"]:
-        if not successes:  # no success achieved
+        if not successes: 
             est_time = keyspace_size / summary["attempts_per_second"]
             summary["extrapolation"] = f"Estimated {est_time/3600:.2f} hours to crack (assuming keyspace={keyspace_size})"
 
     return summary
 
 if __name__ == "__main__":
-    # Example: load user categories from users.json
-    with open("users.json", "r") as f:
+    with open(USERS_FILE, "r") as f:
         users = json.load(f)
     user_categories = {u["username"]: u["category"] for u in users}
 
-    logs = parse_logs("logs/attempts.log")
-    # Provide keyspace_size if you want extrapolation (e.g., 2**40 for strong passwords)
+    logs = parse_logs(LOG_FILE)
     report = summarize(logs, user_categories, keyspace_size=2**40)
 
     print("=== Experiment Summary ===")

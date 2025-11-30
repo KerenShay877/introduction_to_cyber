@@ -1,11 +1,13 @@
 # script to register users to the flask server and into the auth.db
 import json
 import sqlite3
-import os
+import sys, os
 import hashlib
 import bcrypt
-from argon2 import PasswordHasher
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from config import DB_PATH, PEPPER
+from argon2 import PasswordHasher
 
 def hash_password(password, salt, method="sha256"):
     pwd = password + PEPPER  # pepper is added only if enabled in advance
