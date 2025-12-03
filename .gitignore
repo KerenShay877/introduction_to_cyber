@@ -10,7 +10,8 @@ registered_users.db
 .DS_Store
 Thumbs.db
 
-rockyou.txt
+data/rockyou.txt
+*.data
 
 .vscode/
 .idea/
