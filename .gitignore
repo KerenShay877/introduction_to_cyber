@@ -10,11 +10,10 @@ registered_users.db
 .DS_Store
 Thumbs.db
 
-data/rockyou.txt
-*.data
-
 .vscode/
 .idea/
 
 *.coverage
 *.pytest_cache/
+
+data/rockyou.txt
