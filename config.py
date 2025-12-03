@@ -10,6 +10,9 @@ HASH_METHOD = os.environ.get("HASH_METHOD", "sha256")
 DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE_DIR, "data", "registered_users.db"))
 LOG_PATH = os.environ.get("LOG_PATH", os.path.join(BASE_DIR, "logs", "attempts.log"))
 
+WORDLIST_PATH = "data/rockyou.txt"
+MAX_ATTEMPTS = 50000
+
 DEFENSE_METHODS = {
     "totp": False,
     "captcha": False,
