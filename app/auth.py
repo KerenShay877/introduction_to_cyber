@@ -15,10 +15,10 @@ def password_hash(password: str, salt: str, method: str = "sha256") -> str:
         return hashlib.sha256((pwd + salt).encode()).hexdigest()
 
     elif method == "bcrypt":
-        return bcrypt.hashpw((pwd + salt).encode(), bcrypt.gensalt()).decode()
+        return bcrypt.hashpw((pwd + salt).encode(), bcrypt.gensalt(rounds=12)).decode()
 
     elif method == "argon2id":
-        ph = PasswordHasher()
+        ph = PasswordHasher(time_cost=1, memory_cost=65536, parallelism=1)
         return ph.hash(pwd + salt)
 
     else:
@@ -42,7 +42,7 @@ def verification_password(password: str, salt: str, hash_stored: str, method: st
             return False
 
     elif method == "argon2id":
-        ph = PasswordHasher()
+        ph = PasswordHasher(time_cost=1, memory_cost=65536, parallelism=1)
         try:
             ph.verify(hash_stored, pwd + salt)
             return True
