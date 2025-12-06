@@ -1,8 +1,11 @@
-# auth.py
+"""
+Authentictation utils for the demo app.
+"""
+
 import bcrypt
 import hashlib
 from argon2 import PasswordHasher
-from config import PEPPER
+from app.config import PEPPER
 
 def password_hash(password: str, salt: str, method: str = "sha256") -> str:
     """

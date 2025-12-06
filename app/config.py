@@ -1,6 +1,6 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname("/home/yotam/Projects/introduction_to_cyber/")
 
 GROUP_SEED = int(os.environ.get("GROUP_SEED", "532645069"))
 PEPPER = os.environ.get("PEPPER", "")  # pepper for basic experiements
