@@ -24,3 +24,10 @@ In order to simulate realistic attack scenarios, we divided users.json into thre
   - Represent best-practice security: long, random, a mix of strings and symbols.
   - Resistant to brute force even with fast hashing algorithms.
   - They provide contrast in experiments where defenses are layered, showing that strong passwords plus protections create maximum security possible.
+
+
+  ## The Demo Test App
+  We have created a demo app to test the attacks.
+  ### How to setup
+  Just run `python -m app.routes` from the main dir
+  It is recomended to work with a virtual enviroment (venv). To create one just use `python -m virtualenv venv` and install the deps using `pip install -r requirements.txt`
