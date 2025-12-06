@@ -11,22 +11,14 @@ from config import GROUP_SEED, HASH_METHOD, DEFENSE_METHODS, PEPPER, DB_PATH, LO
 from auth import password_hash, verification_password 
 
 app = Flask(__name__)
+app.register_error_handler(AppError, handle_app_error)
 
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE,
-            password_hash TEXT,
-            salt TEXT,
-            hash_mode TEXT,
-            totp_secret TEXT
-        )
-    """)
-    conn.commit()
-    conn.close()
+
+@app.teardown_appcontext
+def close_db_connection(exception):
+    """Close db gracefully"""
+    close_db()
+
 
 def log_attempt(username, hash_mode, protection_flags, result, latency_ms):
     entry = {
@@ -108,7 +100,9 @@ def login():
 def login_totp():
     return jsonify({"status": "not implemented"}), 501
 
-init_db()
 
 if __name__ == "__main__":
+    with app.app_context():
+        db = get_db()
+        init_db(db)
     app.run(debug=False)
