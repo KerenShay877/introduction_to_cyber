@@ -52,30 +52,8 @@ def home_page():
 @app.route("/register", methods=["POST"])
 def register():
     data = request.json
-    username = data.get("username")
-    password = data.get("password")
-    enable_totp = data.get("enable_totp", False)
+    return register_new_user(data)
 
-    if not username or not password:
-        return jsonify({"error": "Missing username or password"}), 400
-
-    salt = os.urandom(16).hex()
-    password_hashed = password_hash(password, salt, method=HASH_METHOD)
-    totp_secret = os.urandom(16).hex() if enable_totp else None
-
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute(
-            "INSERT INTO users (username, password_hash, salt, hash_mode, totp_secret) VALUES (?,?,?,?,?)",
-            (username, password_hashed, salt, HASH_METHOD, totp_secret)
-        )
-        conn.commit()
-        conn.close()
-    except sqlite3.IntegrityError:
-        return jsonify({"error": "Username already exists"}), 400
-
-    return jsonify({"status": "registered", "username": username, "totp_secret": totp_secret}), 201
 
 @app.route("/login", methods=["POST"])
 def login():
