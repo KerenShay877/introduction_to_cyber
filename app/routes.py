@@ -5,11 +5,23 @@ Flask routes for demo app
 from flask import Flask, request, jsonify, render_template, g
 import sqlite3, json, os, sys
 from datetime import datetime
+import logging
+from app.config import (
+    GROUP_SEED,
+    HASH_METHOD,
+    DEFENSE_METHODS,
+    PEPPER,
+    DB_PATH,
+    LOG_PATH,
+)
+from app.auth.auth import password_hash, verification_password
+from app.db import get_db, close_db, init_db
+from app.exceptions import AppError, handle_app_error
+from app.logger_setup import configure_logging
+from app.auth.register import register_new_user
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from config import GROUP_SEED, HASH_METHOD, DEFENSE_METHODS, PEPPER, DB_PATH, LOG_PATH
-from auth import password_hash, verification_password 
-
+configure_logging()
+logger = logging.getLogger("app_logger")
 app = Flask(__name__)
 app.register_error_handler(AppError, handle_app_error)
 
@@ -22,17 +34,15 @@ def close_db_connection(exception):
 
 def log_attempt(username, hash_mode, protection_flags, result, latency_ms):
     entry = {
-        "timestamp": datetime.utcnow().isoformat(),
         "group_seed": GROUP_SEED,
         "username": username,
         "hash_mode": hash_mode,
         "protection_flags": protection_flags,
         "result": result,
-        "latency_ms": latency_ms
+        "latency_ms": latency_ms,
     }
-    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
-    with open(LOG_PATH, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+    logger.info("Login attempt recorded", extra={"payload": entry})
+
 
 @app.route("/")
 def home_page():
