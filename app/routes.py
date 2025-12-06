@@ -1,5 +1,8 @@
-# main flask application
-from flask import Flask, request, jsonify
+"""
+Flask routes for demo app
+"""
+
+from flask import Flask, request, jsonify, render_template, g
 import sqlite3, json, os, sys
 from datetime import datetime
 
@@ -41,7 +44,8 @@ def log_attempt(username, hash_mode, protection_flags, result, latency_ms):
 
 @app.route("/")
 def home_page():
-    return "<h1>Intro to Cybersecurity testing ground</h1><p>Course Project</p>"
+    return render_template("index.html")
+
 
 @app.route("/register", methods=["POST"])
 def register():
