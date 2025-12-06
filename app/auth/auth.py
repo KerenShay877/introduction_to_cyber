@@ -4,8 +4,15 @@ Authentictation utils for the demo app.
 
 import bcrypt
 import hashlib
+import logging
+from datetime import datetime
+from flask import jsonify
 from argon2 import PasswordHasher
-from app.config import PEPPER
+from app.config import PEPPER, GROUP_SEED
+from app.exceptions import AppError
+from app.db import get_db
+
+logger = logging.getLogger("app_logger")
 
 def password_hash(password: str, salt: str, method: str = "sha256") -> str:
     """
@@ -28,7 +35,7 @@ def password_hash(password: str, salt: str, method: str = "sha256") -> str:
         raise ValueError(f"Hash method not supported: {method}")
 
 
-def verification_password(password: str, salt: str, hash_stored: str, method: str = "sha256") -> bool:
+def _is_password_matching(password: str, salt: str, hash_stored: str, method: str = "sha256") -> bool:
     """
     Verify a password against the stored hash using the same method.
     """
@@ -54,3 +61,40 @@ def verification_password(password: str, salt: str, hash_stored: str, method: st
 
     else:
         raise ValueError(f"Hash method not supported: {method}")
+    
+def _log_login_attempt(username, hash_mode, protection_flags, result, latency_ms):
+    entry = {
+        "group_seed": GROUP_SEED,
+        "username": username,
+        "hash_mode": hash_mode,
+        "protection_flags": protection_flags,
+        "result": result,
+        "latency_ms": latency_ms,
+    }
+    logger.info("Login attempt recorded", extra={"payload": entry})
+
+def login_user(username: str, password: str):
+    start = datetime.utcnow()
+
+    db = get_db()
+    c = db.cursor()
+    c.execute(
+        "SELECT password_hash, salt, hash_mode, totp_secret FROM users WHERE username=?",
+        (username,),
+    )
+    row = c.fetchone()
+
+    if not row:
+        latency = (datetime.utcnow() - start).microseconds // 1000
+        _log_login_attempt(username, "sha256", [], "FAILED", latency)
+        raise AppError("Invalid credentials", 401)
+
+    stored_hash, salt, hash_mode, totp_secret = row
+    if _is_password_matching(password, salt, stored_hash, method=hash_mode):
+        latency = (datetime.utcnow() - start).microseconds // 1000
+        _log_login_attempt(username, hash_mode, [], "SUCCESS", latency)
+        return jsonify({"status": "login success"}), 200
+    else:
+        latency = (datetime.utcnow() - start).microseconds // 1000
+        _log_login_attempt(username, hash_mode, [], "FAILED", latency)
+        raise AppError("Invalid credentials", 401)

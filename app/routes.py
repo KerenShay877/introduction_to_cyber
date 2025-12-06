@@ -14,7 +14,7 @@ from app.config import (
     DB_PATH,
     LOG_PATH,
 )
-from app.auth.auth import password_hash, verification_password
+from app.auth.auth import login_user
 from app.db import get_db, close_db, init_db
 from app.exceptions import AppError, handle_app_error
 from app.logger_setup import configure_logging
@@ -30,18 +30,6 @@ app.register_error_handler(AppError, handle_app_error)
 def close_db_connection(exception):
     """Close db gracefully"""
     close_db()
-
-
-def log_attempt(username, hash_mode, protection_flags, result, latency_ms):
-    entry = {
-        "group_seed": GROUP_SEED,
-        "username": username,
-        "hash_mode": hash_mode,
-        "protection_flags": protection_flags,
-        "result": result,
-        "latency_ms": latency_ms,
-    }
-    logger.info("Login attempt recorded", extra={"payload": entry})
 
 
 @app.route("/")
@@ -60,32 +48,7 @@ def login():
     data = request.json
     username = data.get("username")
     password = data.get("password")
-
-    start = datetime.utcnow()
-
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute(
-        "SELECT hash, salt, hash_mode, totp_secret FROM users WHERE username=?",
-        (username,),
-    )
-    row = c.fetchone()
-    conn.close()
-
-    if not row:
-        latency = (datetime.utcnow() - start).microseconds // 1000
-        log_attempt(username, "sha256", [], "FAILED", latency)
-        return jsonify({"error": "Invalid credentials"}), 401
-
-    stored_hash, salt, hash_mode, totp_secret = row
-    if verification_password(password, salt, stored_hash, method=hash_mode):
-        latency = (datetime.utcnow() - start).microseconds // 1000
-        log_attempt(username, hash_mode, [], "SUCCESS", latency)
-        return jsonify({"status": "login success"}), 200
-    else:
-        latency = (datetime.utcnow() - start).microseconds // 1000
-        log_attempt(username, hash_mode, [], "FAILED", latency)
-        return jsonify({"error": "Invalid credentials"}), 401
+    return login_user(username, password)
 
 
 @app.route("/login_totp", methods=["POST"])
