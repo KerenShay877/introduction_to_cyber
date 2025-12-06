@@ -65,7 +65,10 @@ def login():
 
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("SELECT hash, salt, hash_mode, totp_secret FROM users WHERE username=?", (username,))
+    c.execute(
+        "SELECT hash, salt, hash_mode, totp_secret FROM users WHERE username=?",
+        (username,),
+    )
     row = c.fetchone()
     conn.close()
 
@@ -83,6 +86,7 @@ def login():
         latency = (datetime.utcnow() - start).microseconds // 1000
         log_attempt(username, hash_mode, [], "FAILED", latency)
         return jsonify({"error": "Invalid credentials"}), 401
+
 
 @app.route("/login_totp", methods=["POST"])
 def login_totp():
