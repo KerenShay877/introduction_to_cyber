@@ -11,8 +11,8 @@ from argon2 import PasswordHasher
 # allow imports from project root
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from config import DB_PATH, PEPPER
-from totp_utilities import generate_totp_secret
+from app.config import DB_PATH, PEPPER
+from app.totp_utilities import generate_totp_secret
 
 
 def hash_password(password, salt, method="sha256"):

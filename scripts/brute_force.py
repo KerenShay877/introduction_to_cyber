@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import pyotp
+from app.config import GROUP_SEED, DEFENSE_METHODS
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -60,6 +61,11 @@ def brute_force(username):
         if resp.status_code == 403 and "Account locked" in resp.text:
             print(f"[LOCKOUT] {username} locked, stopping attempts for this user.")
             return
+        
+        
+        if resp.status_code == 401 and "Invalid TOTP" in resp.text:
+            print(f"[TOTP] {username} rejected due to invalid TOTP, stopping attempts.")
+            return
 
         if resp.status_code == 200:
             result = "SUCCESS"
@@ -80,11 +86,14 @@ def brute_force(username):
 
         entry = {
             "timestamp": datetime.now().isoformat(),
+            "group_seed": GROUP_SEED,
             "username": username,
             "hash_mode": hash_mode,
+            "protection_flags": [k for k,v in DEFENSE_METHODS.items() if v],
             "result": result,
             "latency_ms": latency_ms
         }
+
         with open(LOG_FILE, "a") as f:
             f.write(json.dumps(entry) + "\n")
 

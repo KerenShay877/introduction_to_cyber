@@ -1,5 +1,4 @@
 """Set up global logger
-
 """
 
 import logging
@@ -13,7 +12,8 @@ class JsonFormatter(logging.Formatter):
         log_record = {
             "timestamp": datetime.utcnow().isoformat(),
             "level": record.levelname,
-            "message": record.getMessage()
+            "message": record.getMessage(),
+            "group_seed": GROUP_SEED,
         }
         if hasattr(record, 'payload'):
             log_record.update(record.payload)
@@ -27,7 +27,6 @@ def configure_logging():
     logger = logging.getLogger("app_logger")
     logger.setLevel(logging.INFO)
 
-    # No dup loggers
     if logger.hasHandlers():
         logger.handlers.clear()
 

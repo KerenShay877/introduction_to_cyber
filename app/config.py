@@ -27,8 +27,8 @@ DEFENSE_METHODS = {
 
 # Defense method limits
 TOTP_TIMEOUT = int(os.environ.get("TOTP_TIMEOUT", "30"))
-RATE_LIMIT_MAX_ATTEMPTS = int(os.environ.get("RATE_LIMIT_MAX_ATTEMPTS", "5"))
+RATE_LIMIT_MAX_ATTEMPTS = int(os.environ.get("RATE_LIMIT_MAX_ATTEMPTS", "15"))
 RATE_LIMIT_WINDOW_SEC = int(os.environ.get("RATE_LIMIT_WINDOW_SEC", "60"))
-LOCKOUT_THRESHOLD = int(os.environ.get("LOCKOUT_THRESHOLD", "3"))
-LOCKOUT_DURATION_SEC = int(os.environ.get("LOCKOUT_DURATION_SEC", "300"))
+LOCKOUT_THRESHOLD = int(os.environ.get("LOCKOUT_THRESHOLD", "5"))
+LOCKOUT_DURATION_SEC = int(os.environ.get("LOCKOUT_DURATION_SEC", "900"))
 CAPTCHA_SECRET = os.environ.get("CAPTCHA_SECRET", str(GROUP_SEED))

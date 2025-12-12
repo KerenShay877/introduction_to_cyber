@@ -5,6 +5,7 @@ import json
 import os
 import pyotp
 from datetime import datetime
+from app.config import GROUP_SEED, DEFENSE_METHODS
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 BASE_URL = "http://127.0.0.1:5000"
@@ -59,6 +60,10 @@ def password_spray():
                 print(f"[LOCKOUT] {username} locked, stopping attempts for this user.")
                 break  
             
+            if resp.status_code == 401 and "Invalid TOTP" in resp.text:
+                print(f"[TOTP] {username} rejected due to invalid TOTP, stopping attempts.")
+                break
+            
             if resp.status_code == 200:
                 result = "SUCCESS"
                 print(f"[SUCCESS] {username} authenticated with password '{pwd}' (latency {latency_ms} ms)")
@@ -69,11 +74,14 @@ def password_spray():
 
             entry = {
                 "timestamp": datetime.now().isoformat(),
+                "group_seed": GROUP_SEED,
                 "username": username,
                 "hash_mode": hash_mode,
+                "protection_flags": [k for k,v in DEFENSE_METHODS.items() if v],
                 "result": result,
                 "latency_ms": latency_ms
             }
+
             with open(LOG_FILE, "a") as f:
                 f.write(json.dumps(entry) + "\n")
 

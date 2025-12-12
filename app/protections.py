@@ -1,6 +1,7 @@
 # rate limit, captcha, lockout, pepper
 
 import time
+import uuid
 from collections import defaultdict
 from app.config import (
     DEFENSE_METHODS,
@@ -12,10 +13,10 @@ from app.config import (
     PEPPER,
 )
 
-
-_rate_limit_tracker = defaultdict(list)       # {ip: [timestamps]}
+_rate_limit_tracker = defaultdict(list)     
 _lockout_tracker = defaultdict(lambda: {"fails": 0, "locked_until": 0})
-_captcha_tracker = defaultdict(int)           # {username: fail_count}
+_captcha_tracker = defaultdict(int)           
+_captcha_tokens = {}                          
 
 def check_rate_limit(ip: str) -> bool:
     """Return False if IP exceeded rate limit, True otherwise."""
@@ -41,7 +42,6 @@ def check_lockout(username: str) -> bool:
     info = _lockout_tracker[username]
     return now >= info["locked_until"]
 
-
 def register_failure(username: str):
     """Increment failure count and lock account if threshold exceeded."""
     if not DEFENSE_METHODS.get("lockout", False):
@@ -53,7 +53,6 @@ def register_failure(username: str):
         info["locked_until"] = time.time() + LOCKOUT_DURATION_SEC
         info["fails"] = 0
 
-
 def require_captcha(username: str) -> bool:
     """
     Return True if captcha is required for this user.
@@ -63,13 +62,17 @@ def require_captcha(username: str) -> bool:
         return False
 
     _captcha_tracker[username] += 1
-    return _captcha_tracker[username] >= LOCKOUT_THRESHOLD  # reuse threshold for simplicity
+    return _captcha_tracker[username] >= LOCKOUT_THRESHOLD 
 
+def get_captcha_token(group_seed: int, username: str) -> str:
+    """Generate a fresh captcha token each time."""
+    token = f"captcha_{group_seed}_{CAPTCHA_SECRET}_{uuid.uuid4().hex}"
+    _captcha_tokens[username] = token
+    return token
 
-def get_captcha_token(group_seed: int) -> str:
-    """Return a valid captcha token (simulation)."""
-    return f"captcha_token_{group_seed}_{CAPTCHA_SECRET}"
-
+def validate_captcha_token(username: str, token: str) -> bool:
+    """Check if the provided token matches the stored one."""
+    return _captcha_tokens.get(username) == token
 
 def apply_pepper(password: str) -> str:
     """

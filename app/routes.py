@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, g
 import sqlite3
 import logging
 import pyotp
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.config import GROUP_SEED, DEFENSE_METHODS, DB_PATH
 from app.auth.auth import login_user, _is_password_matching
 from app.db import get_db, close_db, init_db
@@ -13,6 +13,7 @@ from app import protections
 
 configure_logging()
 logger = logging.getLogger("app_logger")
+logger.disabled = True
 app = Flask(__name__)
 app.register_error_handler(AppError, handle_app_error)
 
@@ -50,9 +51,15 @@ def login():
         return jsonify({"captcha_required": True, "captcha_token": token}), 403
 
     result = login_user(username, password)
-    if result.status_code != 200:
-        protections.register_failure(username)
-    return result
+    if isinstance(result, tuple):
+        response, status = result
+        if status != 200:
+            protections.register_failure(username)
+        return response, status
+    else:
+        if result.status_code != 200:
+            protections.register_failure(username)
+        return result
 
 
 @app.route("/login_totp", methods=["POST"])
@@ -77,8 +84,23 @@ def login_totp():
     if _is_password_matching(password, salt, stored_hash, method=hash_mode):
         if DEFENSE_METHODS.get("totp", False) and totp_secret:
             totp = pyotp.TOTP(totp_secret)
-            if not totp.verify(totp_code):
+
+            offset_seconds = protections.get_user_totp_offset(username)
+            now = datetime.utcnow() + timedelta(seconds=offset_seconds)
+
+            if not totp.verify(totp_code, valid_window=1, for_time=now):
+                protections.register_failure(username)
+                latency = (datetime.utcnow() - start).microseconds // 1000
+                logger.info("Login attempt", extra={"payload": {
+                    "group_seed": GROUP_SEED,
+                    "username": username,
+                    "hash_mode": hash_mode,
+                    "protection_flags": [k for k,v in DEFENSE_METHODS.items() if v],
+                    "result": "FAILED",
+                    "latency_ms": latency
+                }})
                 return jsonify({"error": "Invalid TOTP"}), 401
+
         latency = (datetime.utcnow() - start).microseconds // 1000
         logger.info("Login attempt", extra={"payload": {
             "group_seed": GROUP_SEED,

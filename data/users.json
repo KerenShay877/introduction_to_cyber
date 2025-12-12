@@ -22,13 +22,14 @@
   {"username": "user20_medium", "password": "Music2025", "category": "medium", "hash_mode": "bcrypt", "totp_secret": null},
 
   {"username": "user21_strong", "password": "X9!b$7kLm@Qz2#Rt", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
-  {"username": "user22_strong", "password": "dL3p$W8zR!rN0oL%", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="},
+  {"username": "user22_strong", "password": "dL3p$W8zR!rN0oL%", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2HI4DFOYZQ===="},
   {"username": "user23_strong", "password": "mQ7&zT9!Lp@Xy4$K", "category": "strong", "hash_mode": "argon2id", "totp_secret": "MFRGGZDFMZTWQ2LK"},
   {"username": "user24_strong", "password": "Z!rT7qL%vN3p$W8z", "category": "strong", "hash_mode": "argon2id", "totp_secret": "ONSWG4TFOQ======"},
-  {"username": "user25_strong", "password": "Qz2#tRX9!a$7kLm@", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
-  {"username": "user26_strong", "password": "T0qL%vN3p$W8zY!r", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="},
-  {"username": "user27_strong", "password": "Lm@Qz2#tRX9!a$7k", "category": "strong", "hash_mode": "argon2id", "totp_secret": "MFRGGZDFMZTWQ2LK"},
-  {"username": "user28_strong", "password": "W8zY!rT0qL%vN3p$", "category": "strong", "hash_mode": "argon2id", "totp_secret": "ONSWG4TFOQ======"},
-  {"username": "user29_strong", "password": "a$7kLm@Qz2#tRX9!", "category": "strong", "hash_mode": "argon2id", "totp_secret": "JBSWY3DPEHPK3PXP"},
-  {"username": "user30_strong", "password": "Z!n1v3ns3#lxp@asion", "category": "strong", "hash_mode": "argon2id", "totp_secret": "NB2W45DFOIZA===="}
+  {"username": "user25_strong", "password": "Qz2#tRX9!a$7kLm@", "category": "strong", "hash_mode": "argon2id", "totp_secret": "KRUGS4ZANFZSAYJA"},
+  {"username": "user26_strong", "password": "T0qL%vN3p$W8zY!r", "category": "strong", "hash_mode": "argon2id", "totp_secret": "C5XW6YTBON2HI4DF"},
+  {"username": "user27_strong", "password": "Lm@Qz2#tRX9!a$7k", "category": "strong", "hash_mode": "argon2id", "totp_secret": "ZW3WY5DPOJSSAZDF"},
+  {"username": "user28_strong", "password": "W8zY!rT0qL%vN3p$", "category": "strong", "hash_mode": "argon2id", "totp_secret": "HUXW4YTBMFZXI2LK"},
+  {"username": "user29_strong", "password": "a$7kLm@Qz2#tRX9!", "category": "strong", "hash_mode": "argon2id", "totp_secret": "QBSWY3DPOJXXEZDF"},
+  {"username": "user30_strong", "password": "Z!n1v3ns3#lxp@asion", "category": "strong", "hash_mode": "argon2id", "totp_secret": "LUXW6YTBONSWG4TF"}
+
 ]
