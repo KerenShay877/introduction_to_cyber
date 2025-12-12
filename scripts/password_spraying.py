@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import os
+import pyotp
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -30,15 +31,38 @@ def password_spray():
             username = user["username"]
             hash_mode = user.get("hash_mode", "sha256")
             start = time.time()
-            resp = requests.post(f"{BASE_URL}/login", json={
-                "username": username,
-                "password": pwd
-            })
+            if user.get("totp_secret"):
+                # for strong users we use /login_totp
+                code = pyotp.TOTP(user["totp_secret"]).now()
+                resp = requests.post(f"{BASE_URL}/login_totp", json={
+                    "username": username,
+                    "password": pwd,
+                    "totp": code
+                })
+            else:
+                # for weak/medium users we use normal login
+                resp = requests.post(f"{BASE_URL}/login", json={
+                    "username": username,
+                    "password": pwd
+                })
             latency_ms = int((time.time() - start) * 1000)
 
+            if resp.status_code == 403 and "captcha_required" in resp.text:
+                print(f"[CAPTCHA] {username} blocked, stopping attempts for this user.")
+                break  
+
+            if resp.status_code == 429:
+                print("[RATE LIMIT] Global block triggered, stopping experiment.")
+                return  
+
+            if resp.status_code == 403 and "Account locked" in resp.text:
+                print(f"[LOCKOUT] {username} locked, stopping attempts for this user.")
+                break  
+            
             if resp.status_code == 200:
                 result = "SUCCESS"
                 print(f"[SUCCESS] {username} authenticated with password '{pwd}' (latency {latency_ms} ms)")
+                break
             else:
                 result = "FAILED"
                 print(f"[FAILED] {username} with '{pwd}' (latency {latency_ms} ms)")
