@@ -19,9 +19,9 @@ MAX_ATTEMPTS = 50000
 # Defense toggles
 DEFENSE_METHODS = {
     "totp": False,
-    "captcha": True,
-    "lockout": False,
-    "rate_limit": True,
+    "captcha": False,
+    "lockout": True,
+    "rate_limit": False,
     "pepper": False,
 }
 

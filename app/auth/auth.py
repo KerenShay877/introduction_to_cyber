@@ -1,5 +1,5 @@
 """
-Authentication utils for the demo app.
+Authentication utilities for users
 """
 
 import bcrypt
@@ -11,6 +11,7 @@ from argon2 import PasswordHasher
 from app.config import PEPPER, GROUP_SEED, DEFENSE_METHODS
 from app.exceptions import AppError
 from app.db import get_db
+from app.protections import check_lockout, register_failure
 
 logger = logging.getLogger("app_logger")
 
@@ -78,6 +79,11 @@ def _log_login_attempt(username, hash_mode, result, latency_ms):
 def login_user(username: str, password: str):
     start = datetime.utcnow()
 
+    if DEFENSE_METHODS.get("lockout", False) and not check_lockout(username):
+        latency = (datetime.utcnow() - start).microseconds // 1000
+        _log_login_attempt(username, "bcrypt", "LOCKED", latency)
+        raise AppError("Account locked due to too many failures", 403)
+
     db = get_db()
     c = db.cursor()
     c.execute(
@@ -99,4 +105,5 @@ def login_user(username: str, password: str):
     else:
         latency = (datetime.utcnow() - start).microseconds // 1000
         _log_login_attempt(username, hash_mode, "FAILED", latency)
+        register_failure(username)
         raise AppError("Invalid credentials", 401)

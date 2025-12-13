@@ -38,10 +38,8 @@ def register_new_user(request_data):
     if not username or not password:
         raise AppError("Missing username or password", status_code=400)
 
-
     db = get_db()
     
-
     try:
         registration = Registration(username, password, enable_totp)
         totp_secret = registration.apply_to_db(db)
