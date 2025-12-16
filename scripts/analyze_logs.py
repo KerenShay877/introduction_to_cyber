@@ -11,8 +11,6 @@ LOG_FILE = os.path.join(BASE_DIR, "logs", "attempts.log")
 def parse_logs(log_file):
     """
     Parse JSON lines log file into structured entries.
-    Each line should contain:
-    timestamp, group_seed, username, hash_mode, protection_flags, result, latency_ms
     """
     results = []
     with open(log_file, "r") as f:
@@ -28,8 +26,6 @@ def parse_logs(log_file):
 def summarize(results, user_categories, keyspace_size=None):
     """
     Summarize metrics across all log entries.
-    user_categories: dict mapping username -> category (weak/medium/strong)
-    keyspace_size: optional int, used for extrapolation if no success achieved
     """
     summary = {
         "total_attempts": len(results),

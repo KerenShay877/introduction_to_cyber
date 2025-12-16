@@ -1,4 +1,3 @@
-# register_users.py
 # Script to register users into the Flask server's SQLite database
 
 import json
@@ -8,7 +7,7 @@ import hashlib
 import bcrypt
 from argon2 import PasswordHasher
 
-# allow imports from project root
+# added to allow imports from project root
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from app.config import DB_PATH, PEPPER

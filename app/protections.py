@@ -1,4 +1,4 @@
-# rate limit, captcha, lockout, pepper
+# implementations of defense methods
 
 import time
 import uuid
@@ -56,7 +56,7 @@ def register_failure(username: str):
 def require_captcha(username: str) -> bool:
     """
     Return True if captcha is required for this user.
-    After threshold of failures, captcha_required is triggered.
+    After a few failures, captcha_required is triggered.
     """
     if not DEFENSE_METHODS.get("captcha", False):
         return False

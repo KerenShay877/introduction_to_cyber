@@ -47,7 +47,7 @@ def login():
         return jsonify({"error": "Account locked"}), 403
 
     if protections.require_captcha(username):
-        token = protections.get_captcha_token(GROUP_SEED)
+        token = protections.get_captcha_token(username, GROUP_SEED)
         return jsonify({"captcha_required": True, "captcha_token": token}), 403
 
     result = login_user(username, password)

@@ -1,11 +1,10 @@
 """
-login_with_totp.py
 Client script to test /login_totp endpoint with username, password, and TOTP.
 """
 
 import requests
 import json
-from totp_utilities import get_current_token
+from app.totp_utilities import get_current_token
 
 BASE_URL = "http://127.0.0.1:5000"
 

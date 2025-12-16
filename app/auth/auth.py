@@ -18,7 +18,6 @@ logger = logging.getLogger("app_logger")
 def password_hash(password: str, salt: str, method: str = "sha256") -> str:
     """
     Hash a password according to the chosen method.
-    PEPPER is only added if it's set (empty string disables it).
     """
     pwd = password + PEPPER
 

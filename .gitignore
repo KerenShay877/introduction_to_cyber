@@ -17,4 +17,5 @@ Thumbs.db
 *.pytest_cache/
 
 data/rockyou.txt
+scripts/login_with_totp
 venv

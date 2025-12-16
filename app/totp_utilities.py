@@ -1,5 +1,4 @@
 """
-totp_utilities.py
 Helper functions for generating and verifying TOTP secrets and codes.
 """
 

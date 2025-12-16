@@ -9,23 +9,21 @@ PEPPER = os.environ.get("PEPPER", "Qz@N2oY#rN8wP!1qT0s^Rtl9Z%6nLqZ")
 
 HASH_METHOD = os.environ.get("HASH_METHOD", "sha256")
 
-# Paths for DB and logs
 DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE_DIR, "data", "registered_users.db"))
 LOG_PATH = os.environ.get("LOG_PATH", os.path.join(BASE_DIR, "logs", "attempts.log"))
 
 WORDLIST_PATH = os.path.join(BASE_DIR, "data", "rockyou.txt")
 MAX_ATTEMPTS = 50000
 
-# Defense toggles
 DEFENSE_METHODS = {
     "totp": False,
     "captcha": False,
-    "lockout": True,
+    "lockout": False,
     "rate_limit": False,
     "pepper": False,
 }
 
-# Defense method limits
+# Defense methods limits
 TOTP_TIMEOUT = int(os.environ.get("TOTP_TIMEOUT", "30"))
 RATE_LIMIT_MAX_ATTEMPTS = int(os.environ.get("RATE_LIMIT_MAX_ATTEMPTS", "15"))
 RATE_LIMIT_WINDOW_SEC = int(os.environ.get("RATE_LIMIT_WINDOW_SEC", "60"))
