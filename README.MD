@@ -1,5 +1,3 @@
----
-
 ```markdown
 # Password Authentication Research Project
 
