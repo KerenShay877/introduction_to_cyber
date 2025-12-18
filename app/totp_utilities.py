@@ -1,5 +1,5 @@
 """
-Helper functions for generating and verifying TOTP secrets and codes.
+Helper functions for generating and verifying TOTP secrets and codes
 """
 
 import pyotp

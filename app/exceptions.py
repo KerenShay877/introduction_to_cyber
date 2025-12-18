@@ -1,3 +1,7 @@
+"""
+Logs setup
+"""
+
 from flask import jsonify
 import logging
 

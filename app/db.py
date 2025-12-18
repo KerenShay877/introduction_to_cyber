@@ -1,3 +1,7 @@
+"""
+DB functions
+"""
+
 import sqlite3
 from flask import g
 from app.config import DB_PATH

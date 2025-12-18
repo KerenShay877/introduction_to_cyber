@@ -1,4 +1,5 @@
-"""Set up global logger
+"""
+Set up global logger
 """
 
 import logging

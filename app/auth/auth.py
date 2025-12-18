@@ -1,5 +1,5 @@
 """
-Authentication utilities for users
+Authentication utilities for saving users
 """
 
 import bcrypt
@@ -64,6 +64,9 @@ def _is_password_matching(password: str, salt: str, hash_stored: str, method: st
     
 
 def _log_login_attempt(username, hash_mode, result, latency_ms):
+    """
+    Log an attempt
+    """
     entry = {
         "group_seed": GROUP_SEED,
         "username": username,
@@ -76,6 +79,9 @@ def _log_login_attempt(username, hash_mode, result, latency_ms):
 
 
 def login_user(username: str, password: str):
+    """
+    Login a user
+    """
     start = datetime.utcnow()
 
     if DEFENSE_METHODS.get("lockout", False) and not check_lockout(username):

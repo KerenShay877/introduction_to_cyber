@@ -1,4 +1,6 @@
-# Script to register users into the Flask server's SQLite database
+"""
+Script to register users into the Flask server's SQLite database
+"""
 
 import json
 import sqlite3

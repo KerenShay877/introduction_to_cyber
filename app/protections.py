@@ -1,4 +1,6 @@
-# implementations of defense methods
+"""
+Implementations of defense methods
+"""
 
 import time
 import uuid

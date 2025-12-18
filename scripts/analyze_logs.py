@@ -1,3 +1,7 @@
+"""
+Script to analyze logs
+"""
+
 import json
 from datetime import datetime
 from statistics import mean

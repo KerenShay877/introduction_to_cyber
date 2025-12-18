@@ -1,3 +1,6 @@
+"""
+Registration functions
+"""
 from app.db import get_db
 from app.exceptions import AppError
 import logging

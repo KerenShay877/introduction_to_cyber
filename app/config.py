@@ -1,3 +1,7 @@
+"""
+Configuration file
+"""
+
 import os
 
 # Base directory of the project modified for cross‑platform
