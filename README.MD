@@ -53,14 +53,7 @@ We created a demo Flask app to simulate authentication endpoints and defenses.
    cd <repo-dir>
    ```
 
-2. **Create a virtual environment**  
-   ```bash
-   python -m venv venv
-   source venv/bin/activate   # Linux/Mac
-   venv\Scripts\activate      # Windows
-   ```
-
-3. **Install dependencies**  
+2. **Install dependencies**  
    ```bash
    pip install -r requirements.txt
    ```
@@ -73,12 +66,12 @@ We created a demo Flask app to simulate authentication endpoints and defenses.
    - pyotp==2.9.0  
    - pandas==2.2.2  
 
-4. **Run the demo server**  
+3. **Run the demo server**  
    ```bash
    python -m app.routes
    ```
 
-5. **Run attack scripts**  
+4. **Run attack scripts**  
    - Brute force:  
      ```bash
      python -m scripts.brute_force <username>
@@ -99,10 +92,10 @@ We created a demo Flask app to simulate authentication endpoints and defenses.
 ```
 app/
   routes.py        # Flask endpoints
-  config.py        # Defense toggles, pepper, GROUP_SEED
+  config.py        # Defense toggles
 data/
-  users.json       # Test users (weak/medium/strong)
-  rockyou.txt      # Wordlist for attacks (large file, see .gitignore note)
+  users.json       # Test users 
+  rockyou.txt      # Wordlist for attacks
 logs/
   attempts.log     # Raw JSON logs of all attack attempts
 scripts/
@@ -122,17 +115,9 @@ Make sure they exist locally before running:
 
 - `data/rockyou.txt` – large password wordlist used for brute force and spraying.  
 - `logs/attempts.log` – raw logs generated during experiments.  
-- `.env` – environment variables (e.g., pepper secret).  
+- `.env` – environment variables.  
 - `venv/` – local virtual environment.  
 - `__pycache__/` – Python cache files.  
 
-Add these to `.gitignore` but ensure they are present locally when running experiments.
-
----
-
-## Usage Notes
-- All experiments must be run locally in a controlled environment.  
-- Do **not** use real user data or external systems.  
-```
 
 ---
